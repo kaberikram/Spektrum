@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Requirements Document: Spektrum Play</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background: #fff;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #2c3e50;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        
+        h4 {
+            color: #34495e;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .header-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .header-info p {
+            margin: 5px 0;
+            font-weight: 500;
+        }
+        
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .user-story {
+            background: #f1f3f4;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .acceptance-criteria {
+            background: #e8f5e8;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 3px solid #28a745;
+        }
+        
+        .acceptance-criteria strong {
+            color: #155724;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+        }
+        
+        .tech-req {
+            background: #e7f3ff;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+            margin: 10px 0;
+        }
+        
+        @media print {
+            body {
+                max-width: none;
+                margin: 0;
+                padding: 15px;
+            }
+            
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+            
+            .user-story, .acceptance-criteria, .highlight, .tech-req {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Product Requirements Document (PRD): "Spektrum Play"</h1>
+    
+    <div class="header-info">
+        <p><strong>Working Title:</strong> Spektrum Play</p>
+        <p><strong>Document Version:</strong> 1.0</p>
+        <p><strong>Date:</strong> June 27, 2025</p>
+    </div>
+
+    <h2>1. Introduction</h2>
+
+    <h3>1.1 Project Name</h3>
+    <p>Spektrum Play (Working Title - open to change)</p>
+
+    <h3>1.2 Project Goal</h3>
+    <p>To develop a mobile-first Progressive Web App (PWA) designed for autistic children that provides an intuitive, sensory-friendly, and engaging environment for sound exploration, creation, and recording. The primary output will be exportable audio files of user-generated sounds, intended for a musician to sample and incorporate into their work.</p>
+
+    <h3>1.3 Vision</h3>
+    <p>To empower autistic children to express themselves creatively through sound, fostering a unique connection between their spontaneous play and professional musical artistry, while providing a universally accessible and reliable digital tool.</p>
+
+    <h3>1.4 Target Audience</h3>
+    <p>Autistic children, with a focus on their parents/guardians and therapists as facilitators. The app should cater to a range of developmental stages within the autistic spectrum, prioritizing simplicity, predictability, and sensory comfort.</p>
+
+    <h3>1.5 Key Differentiators</h3>
+    <div class="highlight">
+        <ul>
+            <li><strong>Mobile-First PWA:</strong> Ensures broad accessibility and app-like experience without app store barriers.</li>
+            <li><strong>Offline Functionality:</strong> Guarantees consistent access regardless of internet availability, reducing frustration.</li>
+            <li><strong>Sensory-First Design Philosophy:</strong> Prioritizes predictability, minimal distractions, and user control over sensory input.</li>
+            <li><strong>Purposeful Output:</strong> User creations contribute directly to a musician's work, providing a tangible, real-world connection for their play.</li>
+        </ul>
+    </div>
+
+    <h2>2. User Stories / Core Features</h2>
+
+    <h3>2.1 User Roles</h3>
+    <ul>
+        <li><strong>Child User:</strong> The primary interactant, focused on playful sound creation.</li>
+        <li><strong>Parent/Guardian:</strong> Facilitates access, manages device, helps with export, oversees usage.</li>
+        <li><strong>Musician:</strong> Receives and processes the exported audio files.</li>
+    </ul>
+
+    <h3>2.2 Core Interaction Loop</h3>
+
+    <h4>As a Child User, I want to:</h4>
+
+    <div class="user-story">
+        <strong>Explore Sounds:</strong> Interact with elements on the screen to produce immediate and predictable sounds.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> Each interaction (tap, hold, drag) clearly produces a specific sound or modifies an existing one. Sounds are varied (e.g., melodic, percussive, abstract, environmental).
+        </div>
+    </div>
+
+    <div class="user-story">
+        <strong>Manipulate Sounds:</strong> Have control over aspects of the sound being produced (e.g., volume, pitch, effect amount) through simple gestures or visual controls.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> Controls are intuitive (e.g., larger/smaller for volume, left/right for pitch). Changes are smooth, not abrupt.
+        </div>
+    </div>
+
+    <div class="user-story">
+        <strong>Hear My Voice Transformed:</strong> Use the device's microphone to input my own sounds and hear them instantly transformed by effects.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> Real-time audio processing of microphone input is clear and responsive.
+        </div>
+    </div>
+
+    <div class="user-story">
+        <strong>Record My Creations:</strong> Easily start and stop recording the sounds I make within the app.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> Clear visual indication when recording is active. Single, prominent button for start/stop.
+        </div>
+    </div>
+
+    <div class="user-story">
+        <strong>Hear My Recordings:</strong> Playback my recorded sound to review it.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> Simple playback control after recording is stopped.
+        </div>
+    </div>
+
+    <div class="user-story">
+        <strong>Feel in Control:</strong> Have the option to adjust overall app volume to my comfort level.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> A readily accessible master volume control.
+        </div>
+    </div>
+
+    <div class="user-story">
+        <strong>Experience Predictability:</strong> Expect consistent results from my actions without unexpected changes or jarring stimuli.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> No random sounds or sudden visual/auditory changes unless explicitly triggered by a user action.
+        </div>
+    </div>
+
+    <h4>As a Parent/Guardian, I want to:</h4>
+
+    <div class="user-story">
+        <strong>Easily Access the App:</strong> Install the app to the device's home screen for quick access without relying on app stores.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> App meets PWA installability criteria.
+        </div>
+    </div>
+
+    <div class="user-story">
+        <strong>Ensure Offline Functionality:</strong> Know that the app will work reliably even without an internet connection.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> Core sound creation and recording functions work fully offline after initial load.
+        </div>
+    </div>
+
+    <div class="user-story">
+        <strong>Export Recordings:</strong> Easily export the recorded audio files from the device.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> A clear, accessible export mechanism.
+        </div>
+    </div>
+
+    <div class="user-story">
+        <strong>Manage Filenames:</strong> Have the option to rename the exported audio files or have them automatically named for organization.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> User-friendly filename suggestion/input field during export.
+        </div>
+    </div>
+
+    <div class="user-story">
+        <strong>Be Assured of Privacy:</strong> Know that the app does not collect personal data or upload recordings without explicit parental action.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> No server-side storage or analytics are implemented unless explicitly requested and approved by the parent for specific features.
+        </div>
+    </div>
+
+    <h4>As a Musician, I want to:</h4>
+
+    <div class="user-story">
+        <strong>Receive High-Quality Audio Files:</strong> Obtain recordings in a standard, uncompressed format suitable for professional sampling.
+        <div class="acceptance-criteria">
+            <strong>Acceptance Criteria:</strong> Exported files are in WAV format (preferred) or high-quality WebM/Opus.
+        </div>
+    </div>
+
+    <h2>3. Functional Requirements</h2>
+
+    <h3>3.1 Sound Generation & Manipulation</h3>
+    <div class="tech-req">
+        <ul>
+            <li><strong>Gesture-based Sound Triggers:</strong> Support for touch, hold, and drag gestures to initiate and modify sounds.</li>
+            <li><strong>Real-time Audio Synthesis/Playback:</strong> Utilize Tone.js for low-latency sound generation and playback.</li>
+            <li><strong>Pre-loaded Sound Library:</strong> Ability to play diverse sounds (e.g., melodic tones, rhythmic elements, abstract textures, environmental sounds).</li>
+            <li><strong>Parameter Control:</strong> Implement dynamic control over core sound parameters (e.g., pitch, volume/gain, simple effects like reverb/delay amount) based on user interaction.</li>
+            <li><strong>Microphone Input:</strong> Integrate device microphone input for real-time processing and inclusion in recordings.</li>
+            <li><strong>No Auto-play:</strong> All audio must be initiated by explicit user interaction.</li>
+        </ul>
+    </div>
+
+    <h3>3.2 Recording</h3>
+    <div class="tech-req">
+        <ul>
+            <li><strong>Start/Stop Recording:</strong> Clear controls to initiate and terminate recording of the app's audio output (including microphone input).</li>
+            <li><strong>Recording Indicator:</strong> Prominent visual feedback when recording is active.</li>
+            <li><strong>Preview Playback:</strong> Ability to play back the most recent recording within the app.</li>
+        </ul>
+    </div>
+
+    <h3>3.3 Export</h3>
+    <div class="tech-req">
+        <ul>
+            <li><strong>Client-Side Export:</strong> All recordings must be processed and exported directly on the user's device. No server uploads are required for this core functionality.</li>
+            <li><strong>File Format:</strong> Export in high-quality audio format (WAV preferred, or high-quality WebM/Opus as a robust alternative).</li>
+            <li><strong>Download Trigger:</strong> Provide a clear "Download" or "Export" button that triggers the file download to the user's device.</li>
+            <li><strong>Automatic Naming:</strong> Default filename generated (e.g., SpektrumPlay_YYMMDD_HHMMSS.wav).</li>
+        </ul>
+    </div>
+
+    <h3>3.4 PWA Features</h3>
+    <div class="tech-req">
+        <ul>
+            <li><strong>Manifest File:</strong> Inclusion of a web app manifest for home screen installability, splash screen, and app icon.</li>
+            <li><strong>Service Worker:</strong> Implementation of a service worker for robust caching of all app assets (HTML, CSS, JS, pre-loaded sounds) to enable full offline functionality.</li>
+            <li><strong>Responsive Design (Mobile-First):</strong> Layout and elements optimized for mobile touchscreens.</li>
+        </ul>
+    </div>
+
+    <h2>4. Non-Functional Requirements</h2>
+
+    <h3>4.1 Performance</h3>
+    <ul>
+        <li><strong>Low Latency Audio:</strong> Minimal delay between user interaction and sound output.</li>
+        <li><strong>Fast Loading:</strong> App should load quickly, especially after initial caching by the service worker.</li>
+        <li><strong>Smooth Animations:</strong> UI animations and visual feedback should be fluid and non-jerky on target mobile devices.</li>
+    </ul>
+
+    <h3>4.2 Usability & Accessibility (Beyond UI/Layout)</h3>
+    <h4>Sensory-Friendly:</h4>
+    <ul>
+        <li>No flashing lights or jarring animations.</li>
+        <li>Smooth transitions for all changes (visual and auditory).</li>
+        <li>Predictable responses to interactions.</li>
+        <li>Option for customizable sound feedback level.</li>
+        <li>Clear feedback on interaction success.</li>
+    </ul>
+    <h4>Additional Usability Requirements:</h4>
+    <ul>
+        <li><strong>Intuitive:</strong> Functionality should be discoverable through exploration.</li>
+        <li><strong>Error Prevention:</strong> Design should minimize accidental actions.</li>
+        <li><strong>Clear State:</strong> Users should always know the current state of the app (e.g., recording, playing, idle).</li>
+    </ul>
+
+    <h3>4.3 Technical</h3>
+    <ul>
+        <li><strong>Browser Compatibility:</strong> Target modern mobile browsers (Chrome, Safari, Firefox on iOS/Android).</li>
+        <li><strong>Maintainability:</strong> Codebase should be well-structured, modular, and documented.</li>
+        <li><strong>Security:</strong> Adherence to web security best practices (HTTPS, secure coding).</li>
+        <li><strong>Scalability (Future):</strong> Architecture should allow for potential future feature additions (e.g., more sound types, simple saving within app).</li>
+    </ul>
+
+</body>
+</html>

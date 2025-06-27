@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metaball Gooey Blob Demo</title>
+  <style>
+    body {
+      background: #F1F1F0;
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    svg {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      position: fixed;
+      top: 0; left: 0;
+      overflow: hidden;
+    }
+    .handle {
+      cursor: pointer;
+      touch-action: none;
+    }
+  </style>
+</head>
+<body>
+  <svg id="metaball-svg">
+    <defs>
+      <filter id="gooey" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="
+          1 0 0 0 0
+          0 1 0 0 0
+          0 0 1 0 0
+          0 0 0 18 -7
+        " result="goo" />
+        <feBlend in="SourceGraphic" in2="goo" />
+      </filter>
+      <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+        <feMerge>
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <linearGradient id="metaball-gradient" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#F47F2B" />
+        <stop offset="100%" stop-color="#FFDB21" />
+      </linearGradient>
+    </defs>
+    <g>
+      <path id="metaball-path" fill="url(#metaball-gradient)" />
+      <circle id="circle1" class="handle" r="60" fill="#F47F2B" cx="90" cy="180" />
+      <circle id="circle2" class="handle" r="40" fill="#FFDB21" cx="320" cy="120" />
+      <circle id="circle3" class="handle" r="50" fill="#3D99ED" cx="250" cy="500" />
+      <circle id="circle4" class="handle" r="35" fill="#54CE52" cx="420" cy="400" />
+    </g>
+  </svg>
+  <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.min.js"></script>
+  <script>
+    // Utility: distance between two points
+    function dist(x1, y1, x2, y2) {
+      return Math.hypot(x2 - x1, y2 - y1);
+    }
+
+    // Improved metaball path calculation for smooth, organic connection
+    function metaballPath(x1, y1, r1, x2, y2, r2, v = 0.5, handleLenRate = 2.4, maxDistance = 180) {
+      const d = dist(x1, y1, x2, y2);
+      if (d > maxDistance || d <= Math.abs(r1 - r2)) return '';
+      const u1 = Math.acos((r1 - r2) / d);
+      const u2 = Math.acos((r2 - r1) / d);
+      const angleBetweenCenters = Math.atan2(y2 - y1, x2 - x1);
+      const angle1 = angleBetweenCenters + u1 + (Math.PI / 2 - u1) * v;
+      const angle2 = angleBetweenCenters - u1 - (Math.PI / 2 - u1) * v;
+      const angle3 = angleBetweenCenters + Math.PI - u2 - (Math.PI / 2 - u2) * v;
+      const angle4 = angleBetweenCenters - Math.PI + u2 + (Math.PI / 2 - u2) * v;
+      const p1 = [x1 + r1 * Math.cos(angle1), y1 + r1 * Math.sin(angle1)];
+      const p2 = [x2 + r2 * Math.cos(angle3), y2 + r2 * Math.sin(angle3)];
+      const p3 = [x2 + r2 * Math.cos(angle4), y2 + r2 * Math.sin(angle4)];
+      const p4 = [x1 + r1 * Math.cos(angle2), y1 + r1 * Math.sin(angle2)];
+      // Handle length
+      const totalRadius = r1 + r2;
+      const d2 = Math.min(v * handleLenRate, dist(p1[0], p1[1], p2[0], p2[1]) / totalRadius);
+      const h1 = [p1[0] + d2 * r1 * Math.sin(angle1), p1[1] - d2 * r1 * Math.cos(angle1)];
+      const h2 = [p2[0] + d2 * r2 * Math.sin(angle3), p2[1] - d2 * r2 * Math.cos(angle3)];
+      const h3 = [p3[0] + d2 * r2 * Math.sin(angle4), p3[1] - d2 * r2 * Math.cos(angle4)];
+      const h4 = [p4[0] + d2 * r1 * Math.sin(angle2), p4[1] - d2 * r1 * Math.cos(angle2)];
+      return `M${p1} C${h1} ${h2} ${p2} L${p3} C${h3} ${h4} ${p4} Z`;
+    }
+
+    // --- Tone.js Setup ---
+    // F6/9 chord: F4, A4, C5, D5, G4
+    const blobNotes = ['F4', 'A4', 'C5', 'D5'];
+    const synths = blobNotes.map(() => {
+      const synth = new Tone.AMSynth({
+        oscillator: { type: 'sine' },
+        envelope: { attack: 1.2, decay: 0.4, sustain: 0.6, release: 2.5 },
+        modulation: { type: 'triangle' },
+        modulationEnvelope: { attack: 1.5, decay: 0.2, sustain: 0.3, release: 2.5 }
+      });
+      synth.volume.value = -4; // Louder, but still not harsh
+      const reverb = new Tone.Reverb({ decay: 5, wet: 0.6 });
+      synth.connect(reverb);
+      reverb.toDestination();
+      return { synth, reverb };
+    });
+
+    // Drag logic
+    function makeDraggable(circle, idx) {
+      let isDragging = false;
+      let offsetX, offsetY;
+      circle.addEventListener('mousedown', startDrag);
+      circle.addEventListener('touchstart', startDrag);
+      function startDrag(e) {
+        isDragging = true;
+        circle.setAttribute('filter', 'url(#glow)');
+        const evt = e.touches ? e.touches[0] : e;
+        offsetX = evt.clientX - +circle.getAttribute('cx');
+        offsetY = evt.clientY - +circle.getAttribute('cy');
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, {passive:false});
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+        // Start note
+        Tone.start();
+        synths[idx].synth.triggerAttack(blobNotes[idx]);
+      }
+      function drag(e) {
+        if (!isDragging) return;
+        const evt = e.touches ? e.touches[0] : e;
+        let x = evt.clientX - offsetX;
+        let y = evt.clientY - offsetY;
+        // Clamp to visible area, accounting for radius and blur (extra 12px for blur)
+        const blurPad = 12;
+        const r = circle.r.baseVal.value;
+        x = Math.max(r + blurPad, Math.min(window.innerWidth - r - blurPad, x));
+        y = Math.max(r + blurPad, Math.min(window.innerHeight - r - blurPad, y));
+        circle.setAttribute('cx', x);
+        circle.setAttribute('cy', y);
+        updateMetaball();
+        if (e.cancelable) e.preventDefault();
+      }
+      function endDrag() {
+        isDragging = false;
+        circle.removeAttribute('filter');
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('touchmove', drag);
+        document.removeEventListener('mouseup', endDrag);
+        document.removeEventListener('touchend', endDrag);
+        // Release note
+        synths[idx].synth.triggerRelease();
+      }
+    }
+
+    // --- Connection Sound Logic ---
+    function updateMetaball() {
+      const c1 = document.getElementById('circle1');
+      const c2 = document.getElementById('circle2');
+      const c3 = document.getElementById('circle3');
+      const c4 = document.getElementById('circle4');
+      const circles = [c1, c2, c3, c4];
+      const pairs = [
+        [0,1], [0,2], [0,3],
+        [1,2], [1,3],
+        [2,3]
+      ];
+      // Remove old paths and gradients
+      const svg = document.getElementById('metaball-svg');
+      Array.from(document.querySelectorAll('.metaball-conn')).forEach(e => e.remove());
+      Array.from(document.querySelectorAll('.metaball-gradient')).forEach(e => e.remove());
+      // Draw metaball paths for all pairs
+      pairs.forEach(([i,j], idx) => {
+        const a = circles[i], b = circles[j];
+        const x1 = +a.getAttribute('cx');
+        const y1 = +a.getAttribute('cy');
+        const r1 = +a.getAttribute('r');
+        const x2 = +b.getAttribute('cx');
+        const y2 = +b.getAttribute('cy');
+        const r2 = +b.getAttribute('r');
+        const color1 = a.getAttribute('fill');
+        const color2 = b.getAttribute('fill');
+        const maxDistance = 180;
+        const d = dist(x1, y1, x2, y2);
+        let opacity = 1;
+        if (d > maxDistance * 0.7) {
+          opacity = Math.max(0, 1 - (d - maxDistance * 0.7) / (maxDistance * 0.3));
+        }
+        const pathStr = metaballPath(x1, y1, r1, x2, y2, r2, 0.5, 2.4, maxDistance);
+        if (pathStr) {
+          // Create a unique gradient for this pair
+          const gradId = `metaball-gradient-${i}-${j}`;
+          let grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+          grad.setAttribute('id', gradId);
+          grad.setAttribute('class', 'metaball-gradient');
+          grad.setAttribute('gradientUnits', 'userSpaceOnUse');
+          grad.setAttribute('x1', x1);
+          grad.setAttribute('y1', y1);
+          grad.setAttribute('x2', x2);
+          grad.setAttribute('y2', y2);
+          let stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+          stop1.setAttribute('offset', '0%');
+          stop1.setAttribute('stop-color', color1);
+          let stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+          stop2.setAttribute('offset', '100%');
+          stop2.setAttribute('stop-color', color2);
+          grad.appendChild(stop1);
+          grad.appendChild(stop2);
+          svg.querySelector('defs').appendChild(grad);
+          // Create the metaball path
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          path.setAttribute('d', pathStr);
+          path.setAttribute('fill', `url(#${gradId})`);
+          path.setAttribute('opacity', opacity);
+          path.setAttribute('class', 'metaball-conn');
+          path.setAttribute('filter', 'url(#gooey)');
+          svg.querySelector('g').insertBefore(path, svg.querySelector('#metaball-path'));
+        }
+      });
+    }
+
+    makeDraggable(document.getElementById('circle1'), 0);
+    makeDraggable(document.getElementById('circle2'), 1);
+    makeDraggable(document.getElementById('circle3'), 2);
+    makeDraggable(document.getElementById('circle4'), 3);
+    updateMetaball();
+  </script>
+</body>
+</html> 

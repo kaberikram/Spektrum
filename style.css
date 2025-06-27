@@ -1,0 +1,65 @@
+/*
+  Spektrum Play Design System
+  --------------------------
+  Primary:   #F47F2B
+  Secondary: #FFDB21
+  Tertiary:  #3D99ED
+  Success:   #54CE52
+  Background: #F1F1F0
+*/
+:root {
+  --color-primary: #F47F2B;
+  --color-secondary: #FFDB21;
+  --color-tertiary: #3D99ED;
+  --color-success: #54CE52;
+  --color-bg: #F1F1F0;
+}
+body {
+  background: var(--color-bg);
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden; /* Prevent scrolling */
+  touch-action: none; /* Prevent pull-to-refresh and scrolling on mobile */
+}
+.button-primary {
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.button-primary:active {
+  background: var(--color-tertiary);
+  transform: scale(0.96);
+}
+.button-secondary {
+  background: var(--color-secondary);
+  color: #333;
+  border: none;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.button-secondary:active {
+  background: var(--color-tertiary);
+  transform: scale(0.96);
+} 
